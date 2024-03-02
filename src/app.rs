@@ -34,7 +34,7 @@ impl App {
                     ..Default::default()
                 },
             )
-            .unwrap(),
+            .expect("Shader code should be valid"),
         }
     }
 
