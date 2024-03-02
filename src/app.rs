@@ -1,9 +1,9 @@
 use macroquad::prelude::*;
 
 pub struct App {
-    fixed_tick_time: f32,
-    camera: Camera2D,
-    material: Material,
+    pub fixed_tick_time: f32,
+    pub camera: Camera2D,
+    pub material: Material,
 }
 
 impl App {
