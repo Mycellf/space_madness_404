@@ -3,6 +3,7 @@ use macroquad::prelude::*;
 pub struct App {
     fixed_tick_time: f32,
     camera: Camera2D,
+    material: Material,
 }
 
 impl App {
@@ -16,6 +17,24 @@ impl App {
                 zoom: Vec2::splat(1.0 / 128.0),
                 ..Default::default()
             },
+            material: load_material(
+                ShaderSource::Glsl {
+                    vertex: include_str!("shaders/vertex.glsl"),
+                    fragment: include_str!("shaders/fragment.glsl"),
+                },
+                MaterialParams {
+                    pipeline_params: PipelineParams {
+                        color_blend: Some(miniquad::BlendState::new(
+                            miniquad::Equation::Add,
+                            miniquad::BlendFactor::Value(miniquad::BlendValue::SourceAlpha),
+                            miniquad::BlendFactor::OneMinusValue(miniquad::BlendValue::SourceAlpha),
+                        )),
+                        ..Default::default()
+                    },
+                    ..Default::default()
+                },
+            )
+            .unwrap(),
         }
     }
 
@@ -23,6 +42,8 @@ impl App {
         self.update_camera();
 
         clear_background(BLACK);
+
+        gl_use_material(&self.material);
     }
 
     pub fn check_fixed_tick(&mut self) {
