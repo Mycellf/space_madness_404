@@ -21,7 +21,6 @@ async fn main() {
         clear_background(BLACK);
 
         camera.zoom.x = camera.zoom.y / screen_width() * screen_height();
-
         set_camera(&camera);
 
         draw_texture(&texture, 0.0, 0.0, WHITE);
