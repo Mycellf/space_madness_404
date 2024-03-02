@@ -1,5 +1,7 @@
 use macroquad::prelude::*;
 
+const MAX_FRAME_TICKS: u32 = 5;
+
 fn window_conf() -> Conf {
     Conf {
         window_title: "Space Madness 404".to_string(),
@@ -37,11 +39,15 @@ async fn main() {
     .unwrap();
 
     let mut camera = Camera2D {
-        zoom: Vec2::splat(1.0 / 64.0),
+        zoom: Vec2::splat(1.0 / 128.0),
         ..Default::default()
     };
 
+    let mut fixed_tick_time = 0.0;
+
     loop {
+        update_fixed_tick(get_frame_time(), &mut fixed_tick_time);
+
         clear_background(BLACK);
 
         camera.zoom.x = camera.zoom.y / screen_width() * screen_height();
@@ -54,3 +60,15 @@ async fn main() {
         next_frame().await;
     }
 }
+
+fn update_fixed_tick(delta_time: f32, fixed_tick_time: &mut f32) {
+    *fixed_tick_time += delta_time;
+
+    for _ in 0..(*fixed_tick_time as u32).min(MAX_FRAME_TICKS) {
+        run_fixed_tick();
+    }
+
+    *fixed_tick_time %= 1.0;
+}
+
+fn run_fixed_tick() {}
