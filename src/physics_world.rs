@@ -1,4 +1,4 @@
-use rapier2d::{na::Vector2, prelude::*};
+use rapier2d::prelude::*;
 
 pub struct PhysicsWorld {
     pub physics_pipeline: PhysicsPipeline,
@@ -33,7 +33,7 @@ impl PhysicsWorld {
 
     pub fn step(&mut self) {
         self.physics_pipeline.step(
-            &Vector2::new(0.0, 0.0),
+            &vector![0.0, 0.0],
             &self.integration_parameters,
             &mut self.island_manager,
             &mut self.broad_phase,
