@@ -1,6 +1,7 @@
 use macroquad::prelude::*;
 
 const MAX_FRAME_TICKS: u32 = 5;
+const FIXED_TICK_DELTA_SECONDS: f32 = 1.0 / 60.0;
 
 fn window_conf() -> Conf {
     Conf {
@@ -62,7 +63,7 @@ async fn main() {
 }
 
 fn update_fixed_tick(delta_time: f32, fixed_tick_time: &mut f32) {
-    *fixed_tick_time += delta_time;
+    *fixed_tick_time += delta_time * FIXED_TICK_DELTA_SECONDS;
 
     for _ in 0..(*fixed_tick_time as u32).min(MAX_FRAME_TICKS) {
         run_fixed_tick();
