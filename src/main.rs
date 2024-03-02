@@ -1,7 +1,7 @@
 use macroquad::prelude::*;
 
 const MAX_FRAME_TICKS: u32 = 5;
-const FIXED_TICK_DELTA_SECONDS: f32 = 1.0 / 60.0;
+const FIXED_TICKS_PER_SEC: f32 = 60.0;
 
 fn window_conf() -> Conf {
     Conf {
@@ -47,7 +47,13 @@ async fn main() {
     let mut fixed_tick_time = 0.0;
 
     loop {
-        update_fixed_tick(get_frame_time(), &mut fixed_tick_time);
+        fixed_tick_time += get_frame_time() * FIXED_TICKS_PER_SEC;
+
+        for _ in 0..(fixed_tick_time as u32).min(MAX_FRAME_TICKS) {
+            camera.target.x += 0.1;
+        }
+
+        fixed_tick_time %= 1.0;
 
         clear_background(BLACK);
 
@@ -61,15 +67,3 @@ async fn main() {
         next_frame().await;
     }
 }
-
-fn update_fixed_tick(delta_time: f32, fixed_tick_time: &mut f32) {
-    *fixed_tick_time += delta_time * FIXED_TICK_DELTA_SECONDS;
-
-    for _ in 0..(*fixed_tick_time as u32).min(MAX_FRAME_TICKS) {
-        run_fixed_tick();
-    }
-
-    *fixed_tick_time %= 1.0;
-}
-
-fn run_fixed_tick() {}
