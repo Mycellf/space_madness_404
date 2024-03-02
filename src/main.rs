@@ -24,7 +24,7 @@ async fn main() {
         ..Default::default()
     };
 
-    let material = load_material(
+    let tri_pixel_material = load_material(
         ShaderSource::Glsl {
             vertex: &vertex_shader,
             fragment: &fragment_shader,
@@ -47,7 +47,7 @@ async fn main() {
         camera.zoom.x = camera.zoom.y / screen_width() * screen_height();
         set_camera(&camera);
 
-        gl_use_material(&material);
+        gl_use_material(&tri_pixel_material);
 
         draw_texture(&texture, 0.0, 0.0, WHITE);
 
