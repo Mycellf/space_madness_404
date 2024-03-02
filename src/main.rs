@@ -1,5 +1,7 @@
 use macroquad::prelude::*;
 
+pub mod game_world;
+
 const MAX_FRAME_TICKS: u32 = 5;
 const FIXED_TICKS_PER_SEC: f32 = 60.0;
 
