@@ -1,9 +1,13 @@
+use crate::object::Object;
+use crate::physics_world::PhysicsWorld;
 use macroquad::prelude::*;
 
 pub struct App {
     pub fixed_tick_time: f32,
     pub camera: Camera2D,
     pub material: Material,
+    pub physics_world: PhysicsWorld,
+    pub objects: Vec<Object>,
 }
 
 impl App {
@@ -15,10 +19,12 @@ impl App {
         Self {
             fixed_tick_time: 0.0,
             camera: Camera2D {
-                zoom: Vec2::splat(1.0 / 128.0),
+                zoom: Vec2::splat(1.0 / 64.0),
                 ..Default::default()
             },
             material: crate::graphics::make_tri_pixel_material(),
+            physics_world: PhysicsWorld::new(),
+            objects: Vec::new(),
         }
     }
 
@@ -28,6 +34,10 @@ impl App {
         clear_background(BLACK);
 
         gl_use_material(&self.material);
+
+        for object in &self.objects {
+            object.draw(&mut self.physics_world);
+        }
     }
 
     pub fn check_fixed_tick(&mut self) {
@@ -40,8 +50,8 @@ impl App {
         self.fixed_tick_time %= 1.0;
     }
 
-    pub fn fixed_tick(&mut self) {
-        self.camera.rotation += 10.0 * Self::FIXED_DELTA_TIME;
+    fn fixed_tick(&mut self) {
+        self.physics_world.step();
     }
 
     fn update_camera(&mut self) {
