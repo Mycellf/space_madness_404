@@ -2,6 +2,7 @@ use crate::keybinds::*;
 use crate::object::Object;
 use crate::physics_world::PhysicsWorld;
 use macroquad::prelude::*;
+use rapier2d::prelude::*;
 
 pub struct App {
     pub paused: bool,
@@ -44,6 +45,16 @@ impl App {
 
         if self.keybinds.get(KeyAction::Debug).is_just_pressed() {
             self.debug ^= true;
+        }
+
+        unsafe {
+            let app_ptr = self as *mut App;
+            for object in &mut self.objects {
+                let object_ptr = object as *mut Object;
+                for component in &object.components {
+                    component.frame_update(object_ptr.as_mut().unwrap(), app_ptr.as_mut().unwrap());
+                }
+            }
         }
 
         self.update_camera();
@@ -96,5 +107,21 @@ impl App {
     fn update_camera(&mut self) {
         self.camera.zoom.x = self.camera.zoom.y / screen_width() * screen_height();
         set_camera(&self.camera);
+    }
+
+    pub fn get_rigid_body(&self, object: &Object) -> &RigidBody {
+        &self.physics_world.rigid_body_set[object.rigid_body]
+    }
+
+    pub fn get_rigid_body_mut(&mut self, object: &Object) -> &mut RigidBody {
+        &mut self.physics_world.rigid_body_set[object.rigid_body]
+    }
+
+    pub fn get_collider(&self, object: &Object) -> &Collider {
+        &self.physics_world.collider_set[object.collider]
+    }
+
+    pub fn get_collider_mut(&mut self, object: &Object) -> &mut Collider {
+        &mut self.physics_world.collider_set[object.collider]
     }
 }

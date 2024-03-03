@@ -27,7 +27,11 @@ async fn main() {
         RigidBodyBuilder::dynamic().can_sleep(false).build(),
         ColliderBuilder::new(make_shape()).build(),
         load_texture("assets/ship.png").await.unwrap(),
-        vec![Component::Boost],
+        vec![
+            Component::FaceMouse,
+            Component::Boost { power: 100.0 },
+            Component::CameraFollow,
+        ],
     ));
 
     app.objects.push(Object::new(
