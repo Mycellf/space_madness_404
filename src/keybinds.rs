@@ -58,6 +58,7 @@ impl Keybinds {
         let mut map = HashMap::new();
 
         map.insert(KeyAction::Boost, (vec![KeyCode::W, KeyCode::Up], Off));
+        map.insert(KeyAction::Slow, (vec![KeyCode::S, KeyCode::Down], Off));
         map.insert(KeyAction::Pause, (vec![KeyCode::Escape], Off));
         map.insert(KeyAction::Debug, (vec![KeyCode::F3], Off));
 
@@ -76,6 +77,7 @@ impl Default for Keybinds {
 #[derive(PartialEq, Eq, Clone, Copy, Hash, Debug)]
 pub enum KeyAction {
     Boost,
+    Slow,
     Pause,
     Debug,
 }

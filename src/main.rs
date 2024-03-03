@@ -29,7 +29,10 @@ async fn main() {
         load_texture("assets/ship.png").await.unwrap(),
         vec![
             Component::FaceMouse,
-            Component::Boost { power: 100.0 },
+            Component::Motion {
+                power: 100.0,
+                brake: 0.975,
+            },
             Component::CameraFollow,
         ],
     ));
@@ -39,8 +42,6 @@ async fn main() {
         RigidBodyBuilder::dynamic()
             .can_sleep(false)
             .translation(vector![40.0, 0.0])
-            .linvel(vector![-2.0, 0.0])
-            .angvel(-0.35)
             .build(),
         ColliderBuilder::new(make_shape()).build(),
         load_texture("assets/ship.png").await.unwrap(),
