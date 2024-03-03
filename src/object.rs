@@ -51,4 +51,35 @@ impl Object {
             },
         )
     }
+
+    pub fn draw_info(&self, physics_world: &mut PhysicsWorld) {
+        let rigid_body = &physics_world.rigid_body_set[self.rigid_body];
+        let collider = &physics_world.collider_set[self.collider];
+
+        let position: Vec2 = (*rigid_body.translation()).into();
+        draw_marker_at(position, 0.8, 0.2, GREEN);
+
+        let center_of_mass: Vec2 = (*rigid_body.center_of_mass()).into();
+        draw_marker_at(center_of_mass, 1.0, 0.2, RED);
+    }
+}
+
+fn draw_marker_at(position: Vec2, radius: f32, bold: f32, color: Color) {
+    draw_line(
+        position.x + radius,
+        position.y,
+        position.x - radius,
+        position.y,
+        bold,
+        color,
+    );
+
+    draw_line(
+        position.x,
+        position.y + radius,
+        position.x,
+        position.y - radius,
+        bold,
+        color,
+    );
 }

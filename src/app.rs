@@ -4,6 +4,7 @@ use crate::physics_world::PhysicsWorld;
 use macroquad::prelude::*;
 
 pub struct App {
+    pub paused: bool,
     pub fixed_tick_time: f32,
     pub camera: Camera2D,
     pub material: Material,
@@ -19,6 +20,7 @@ impl App {
 
     pub fn new() -> Self {
         Self {
+            paused: false,
             fixed_tick_time: 0.0,
             camera: Camera2D {
                 zoom: Vec2::splat(1.0 / 64.0),
@@ -34,6 +36,10 @@ impl App {
     pub fn frame_tick(&mut self) {
         self.keybinds.update();
 
+        if self.keybinds.get(KeyAction::Pause).is_just_pressed() {
+            self.paused ^= true;
+        }
+
         self.update_camera();
 
         clear_background(BLACK);
@@ -46,11 +52,16 @@ impl App {
 
         gl_use_default_material();
 
-        draw_line(1.0, 0.0, -1.0, 0.0, 0.1, GREEN);
-        draw_line(0.0, 1.0, 0.0, -1.0, 0.1, GREEN);
+        for object in &self.objects {
+            object.draw_info(&mut self.physics_world);
+        }
     }
 
     pub fn check_fixed_tick(&mut self) {
+        if self.paused {
+            return;
+        }
+
         self.fixed_tick_time += get_frame_time() * Self::FIXED_TICKS_PER_SEC;
 
         for _ in 0..(self.fixed_tick_time as u32).min(Self::MAX_TICKS_PER_FRAME) {
