@@ -5,6 +5,7 @@ use macroquad::prelude::*;
 
 pub struct App {
     pub paused: bool,
+    pub debug: bool,
     pub fixed_tick_time: f32,
     pub camera: Camera2D,
     pub material: Material,
@@ -21,6 +22,7 @@ impl App {
     pub fn new() -> Self {
         Self {
             paused: false,
+            debug: false,
             fixed_tick_time: 0.0,
             camera: Camera2D {
                 zoom: Vec2::splat(1.0 / 64.0),
@@ -40,6 +42,10 @@ impl App {
             self.paused ^= true;
         }
 
+        if self.keybinds.get(KeyAction::Debug).is_just_pressed() {
+            self.debug ^= true;
+        }
+
         self.update_camera();
 
         clear_background(BLACK);
@@ -52,8 +58,10 @@ impl App {
 
         gl_use_default_material();
 
-        for object in &self.objects {
-            object.draw_info(&mut self.physics_world);
+        if self.debug {
+            for object in &self.objects {
+                object.draw_info(&mut self.physics_world);
+            }
         }
     }
 

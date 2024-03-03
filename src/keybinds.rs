@@ -59,6 +59,7 @@ impl Keybinds {
 
         map.insert(KeyAction::Boost, (vec![KeyCode::W, KeyCode::Up], Off));
         map.insert(KeyAction::Pause, (vec![KeyCode::Escape], Off));
+        map.insert(KeyAction::Debug, (vec![KeyCode::F3], Off));
 
         map
     }
@@ -76,6 +77,7 @@ impl Default for Keybinds {
 pub enum KeyAction {
     Boost,
     Pause,
+    Debug,
 }
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
