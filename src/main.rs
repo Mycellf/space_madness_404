@@ -4,6 +4,7 @@ use rapier2d::prelude::*;
 
 pub mod app;
 pub mod graphics;
+pub mod keybinds;
 pub mod object;
 pub mod physics_world;
 
