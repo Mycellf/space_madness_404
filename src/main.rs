@@ -3,6 +3,7 @@ use macroquad::prelude::*;
 use rapier2d::prelude::*;
 
 pub mod app;
+pub mod component;
 pub mod graphics;
 pub mod keybinds;
 pub mod object;
