@@ -22,10 +22,23 @@ async fn main() {
     app.objects.push(Object::new(
         &mut app.physics_world,
         RigidBodyBuilder::dynamic()
-            .angvel(0.174532925)
+            .rotation(std::f32::consts::PI)
+            .linvel(vector![0.0, -5.0])
+            .translation(vector![2.0, 40.0])
             .can_sleep(false)
             .build(),
-        ColliderBuilder::cuboid(8.0, 8.0).build(),
+        ColliderBuilder::new(make_shape()).build(),
+        load_texture("assets/ship.png").await.unwrap(),
+    ));
+
+    app.objects.push(Object::new(
+        &mut app.physics_world,
+        RigidBodyBuilder::dynamic()
+            .linvel(vector![0.0, 5.0])
+            .translation(vector![-2.0, -40.0])
+            .can_sleep(false)
+            .build(),
+        ColliderBuilder::new(make_shape()).build(),
         load_texture("assets/ship.png").await.unwrap(),
     ));
 
@@ -36,4 +49,46 @@ async fn main() {
 
         next_frame().await;
     }
+}
+
+// temp
+fn make_shape() -> SharedShape {
+    SharedShape::convex_decomposition(
+        &vec![
+            point![-8.0, 4.0],
+            point![-4.0, 4.0],
+            point![-2.0, 2.0],
+            point![-2.0, 8.0],
+            point![-1.0, 8.0],
+            point![4.0, 3.0],
+            point![6.0, 3.0],
+            point![8.0, 1.0],
+            point![8.0, -1.0],
+            point![6.0, -3.0],
+            point![4.0, -3.0],
+            point![-1.0, -8.0],
+            point![-2.0, -8.0],
+            point![-2.0, -2.0],
+            point![-4.0, -4.0],
+            point![-8.0, -4.0],
+        ],
+        &vec![
+            [0, 1],
+            [1, 2],
+            [2, 3],
+            [3, 4],
+            [4, 5],
+            [5, 6],
+            [6, 7],
+            [7, 8],
+            [8, 9],
+            [9, 10],
+            [10, 11],
+            [11, 12],
+            [12, 13],
+            [13, 14],
+            [14, 15],
+            [15, 0],
+        ],
+    )
 }
