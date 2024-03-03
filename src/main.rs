@@ -51,25 +51,42 @@ async fn main() {
 
 // temp
 fn make_shape() -> SharedShape {
-    SharedShape::convex_decomposition(
-        &vec![
-            point![-8.0, 4.0],
-            point![-4.0, 4.0],
-            point![-2.0, 2.0],
-            point![-2.0, 8.0],
-            point![-1.0, 8.0],
-            point![4.0, 3.0],
-            point![6.0, 3.0],
-            point![8.0, 1.0],
-            point![8.0, -1.0],
-            point![6.0, -3.0],
-            point![4.0, -3.0],
-            point![-1.0, -8.0],
-            point![-2.0, -8.0],
-            point![-2.0, -2.0],
-            point![-4.0, -4.0],
-            point![-8.0, -4.0],
-        ],
-        &(0..16).map(|i| [i, (i + 1) % 16]).collect::<Vec<_>>(),
-    )
+    SharedShape::compound(vec![
+        (
+            Isometry::<Real>::identity(),
+            SharedShape::convex_polyline(vec![
+                point![-2.0, 2.0],
+                point![-4.0, 4.0],
+                point![-8.0, 4.0],
+                point![-8.0, -4.0],
+                point![-4.0, -4.0],
+                point![-2.0, -2.0],
+            ])
+            .unwrap(),
+        ),
+        (
+            Isometry::<Real>::identity(),
+            SharedShape::convex_polyline(vec![
+                point![4.0, 3.0],
+                point![-1.0, 8.0],
+                point![-2.0, 8.0],
+                point![-2.0, -8.0],
+                point![-1.0, -8.0],
+                point![4.0, -3.0],
+            ])
+            .unwrap(),
+        ),
+        (
+            Isometry::<Real>::identity(),
+            SharedShape::convex_polyline(vec![
+                point![8.0, 1.0],
+                point![6.0, 3.0],
+                point![4.0, 3.0],
+                point![4.0, -3.0],
+                point![6.0, -3.0],
+                point![8.0, -1.0],
+            ])
+            .unwrap(),
+        ),
+    ])
 }
