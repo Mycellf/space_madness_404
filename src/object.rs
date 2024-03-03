@@ -77,6 +77,10 @@ fn draw_compound_collider(collider: &Collider, rigod_body_position: &Isometry<Re
                 })
                 .collect();
 
+            for point in &points {
+                draw_marker_at((*point).into(), 0.5, 0.1, MAGENTA)
+            }
+
             for i in 0..points.len() {
                 let a = points[i];
                 let b = points[(i + 1) % points.len()];
