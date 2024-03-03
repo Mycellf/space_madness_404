@@ -21,7 +21,10 @@ async fn main() {
 
     app.objects.push(Object::new(
         &mut app.physics_world,
-        RigidBodyBuilder::dynamic().angvel(0.174532925).build(),
+        RigidBodyBuilder::dynamic()
+            .angvel(0.174532925)
+            .can_sleep(false)
+            .build(),
         ColliderBuilder::cuboid(8.0, 8.0).build(),
         load_texture("assets/ship.png").await.unwrap(),
     ));
