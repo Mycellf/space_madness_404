@@ -61,6 +61,8 @@ impl App {
 
         clear_background(BLACK);
 
+        crate::graphics::draw_stars_around(self.camera.target);
+
         gl_use_material(&self.material);
 
         for object in &self.objects {
