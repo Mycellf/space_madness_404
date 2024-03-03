@@ -1,3 +1,4 @@
+use crate::component::Component;
 use crate::physics_world::PhysicsWorld;
 use macroquad::prelude::*;
 use rapier2d::prelude::*;
@@ -7,6 +8,7 @@ pub struct Object {
     pub collider: ColliderHandle,
     pub texture: Texture2D,
     pub size: Vec2,
+    pub components: Vec<Component>,
 }
 
 impl Object {
@@ -25,6 +27,7 @@ impl Object {
             collider,
             texture,
             size,
+            components: Vec::new(),
         }
     }
 

@@ -2,7 +2,6 @@ use crate::keybinds::*;
 use crate::object::Object;
 use crate::physics_world::PhysicsWorld;
 use macroquad::prelude::*;
-use rapier2d::prelude::*;
 
 pub struct App {
     pub fixed_tick_time: f32,
@@ -48,13 +47,6 @@ impl App {
 
     pub fn check_fixed_tick(&mut self) {
         self.fixed_tick_time += get_frame_time() * Self::FIXED_TICKS_PER_SEC;
-
-        if self.keybinds.get(KeyAction::Boost).is_pressed() {
-            let rigid_body = &mut self.physics_world.rigid_body_set[self.objects[0].rigid_body];
-            let rotation = rigid_body.rotation();
-            let rotation = vector![rotation.re, rotation.im];
-            rigid_body.apply_impulse(rotation * 100.0, true);
-        }
 
         for _ in 0..(self.fixed_tick_time as u32).min(Self::MAX_TICKS_PER_FRAME) {
             self.fixed_tick();
