@@ -7,7 +7,6 @@ pub mod app;
 pub mod component;
 pub mod graphics;
 pub mod keybinds;
-pub mod mouse;
 pub mod object;
 pub mod physics_world;
 
