@@ -2,6 +2,7 @@ use macroquad::prelude::*;
 
 pub mod app;
 pub mod graphics;
+pub mod object;
 pub mod physics_world;
 
 fn window_conf() -> Conf {
