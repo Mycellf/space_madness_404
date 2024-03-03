@@ -22,23 +22,7 @@ async fn main() {
 
     app.objects.push(Object::new(
         &mut app.physics_world,
-        RigidBodyBuilder::dynamic()
-            .rotation(std::f32::consts::PI)
-            .linvel(vector![0.0, -5.0])
-            .translation(vector![2.0, 40.0])
-            .can_sleep(false)
-            .build(),
-        ColliderBuilder::new(make_shape()).build(),
-        load_texture("assets/ship.png").await.unwrap(),
-    ));
-
-    app.objects.push(Object::new(
-        &mut app.physics_world,
-        RigidBodyBuilder::dynamic()
-            .linvel(vector![0.0, 5.0])
-            .translation(vector![-2.0, -40.0])
-            .can_sleep(false)
-            .build(),
+        RigidBodyBuilder::dynamic().can_sleep(false).build(),
         ColliderBuilder::new(make_shape()).build(),
         load_texture("assets/ship.png").await.unwrap(),
     ));
