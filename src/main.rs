@@ -28,6 +28,18 @@ async fn main() {
         load_texture("assets/ship.png").await.unwrap(),
     ));
 
+    app.objects.push(Object::new(
+        &mut app.physics_world,
+        RigidBodyBuilder::dynamic()
+            .can_sleep(false)
+            .translation(vector![40.0, 0.0])
+            .linvel(vector![-2.0, 0.0])
+            .angvel(-0.35)
+            .build(),
+        ColliderBuilder::new(make_shape()).build(),
+        load_texture("assets/ship.png").await.unwrap(),
+    ));
+
     loop {
         app.check_fixed_tick();
 
@@ -58,23 +70,6 @@ fn make_shape() -> SharedShape {
             point![-4.0, -4.0],
             point![-8.0, -4.0],
         ],
-        &vec![
-            [0, 1],
-            [1, 2],
-            [2, 3],
-            [3, 4],
-            [4, 5],
-            [5, 6],
-            [6, 7],
-            [7, 8],
-            [8, 9],
-            [9, 10],
-            [10, 11],
-            [11, 12],
-            [12, 13],
-            [13, 14],
-            [14, 15],
-            [15, 0],
-        ],
+        &(0..16).map(|i| [i, (i + 1) % 16]).collect::<Vec<_>>(),
     )
 }

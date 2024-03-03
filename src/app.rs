@@ -43,6 +43,11 @@ impl App {
         for object in &self.objects {
             object.draw(&mut self.physics_world);
         }
+
+        gl_use_default_material();
+
+        draw_line(1.0, 0.0, -1.0, 0.0, 0.1, GREEN);
+        draw_line(0.0, 1.0, 0.0, -1.0, 0.1, GREEN);
     }
 
     pub fn check_fixed_tick(&mut self) {
