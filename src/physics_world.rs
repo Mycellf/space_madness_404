@@ -49,9 +49,18 @@ impl PhysicsWorld {
         )
     }
 
-    pub fn add_rigidbody(&mut self, rigid_body: RigidBody, collider: Collider) {
+    pub fn add_rigidbody(
+        &mut self,
+        rigid_body: RigidBody,
+        collider: Collider,
+    ) -> (RigidBodyHandle, ColliderHandle) {
         let rigid_body_handle = self.rigid_body_set.insert(rigid_body);
-        self.collider_set
-            .insert_with_parent(collider, rigid_body_handle, &mut self.rigid_body_set);
+        let collider_handle = self.collider_set.insert_with_parent(
+            collider,
+            rigid_body_handle,
+            &mut self.rigid_body_set,
+        );
+
+        (rigid_body_handle, collider_handle)
     }
 }
