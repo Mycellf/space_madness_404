@@ -17,6 +17,7 @@ impl Object {
         rigid_body: RigidBody,
         collider: Collider,
         texture: Texture2D,
+        components: Vec<Component>,
     ) -> Self {
         let (rigid_body, collider) = physics_world.add_rigidbody(rigid_body, collider);
 
@@ -27,7 +28,7 @@ impl Object {
             collider,
             texture,
             size,
-            components: Vec::new(),
+            components,
         }
     }
 

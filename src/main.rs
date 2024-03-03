@@ -1,3 +1,4 @@
+use crate::component::Component;
 use crate::object::Object;
 use macroquad::prelude::*;
 use rapier2d::prelude::*;
@@ -26,6 +27,7 @@ async fn main() {
         RigidBodyBuilder::dynamic().can_sleep(false).build(),
         ColliderBuilder::new(make_shape()).build(),
         load_texture("assets/ship.png").await.unwrap(),
+        vec![Component::Boost],
     ));
 
     app.objects.push(Object::new(
@@ -38,6 +40,7 @@ async fn main() {
             .build(),
         ColliderBuilder::new(make_shape()).build(),
         load_texture("assets/ship.png").await.unwrap(),
+        Vec::new(),
     ));
 
     loop {

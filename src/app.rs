@@ -80,6 +80,16 @@ impl App {
     }
 
     fn fixed_tick(&mut self) {
+        unsafe {
+            let app_ptr = self as *mut App;
+            for object in &mut self.objects {
+                let object_ptr = object as *mut Object;
+                for component in &object.components {
+                    component.fixed_update(object_ptr.as_mut().unwrap(), app_ptr.as_mut().unwrap());
+                }
+            }
+        }
+
         self.physics_world.step();
     }
 

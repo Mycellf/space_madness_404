@@ -3,6 +3,7 @@ use crate::keybinds::KeyAction;
 use crate::object::Object;
 use rapier2d::prelude::*;
 
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum Component {
     CameraFollow,
     Boost,
@@ -10,7 +11,7 @@ pub enum Component {
 }
 
 impl Component {
-    pub fn fixed_update(&mut self, object: &mut Object, app: &mut App) {
+    pub fn fixed_update(self, object: &mut Object, app: &mut App) {
         match self {
             Self::CameraFollow => {}
             Self::Boost => {
