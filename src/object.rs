@@ -10,9 +10,12 @@ pub struct Object {
 }
 
 impl Object {
-    pub fn new(physics_world: &mut PhysicsWorld, collider: Collider, texture: Texture2D) -> Self {
-        let rigid_body = RigidBodyBuilder::new(RigidBodyType::Dynamic).build();
-
+    pub fn new(
+        physics_world: &mut PhysicsWorld,
+        rigid_body: RigidBody,
+        collider: Collider,
+        texture: Texture2D,
+    ) -> Self {
         let (rigid_body, collider) = physics_world.add_rigidbody(rigid_body, collider);
 
         let size = texture.size() / 2.0;
