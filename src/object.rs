@@ -56,12 +56,37 @@ impl Object {
         let rigid_body = &physics_world.rigid_body_set[self.rigid_body];
         let collider = &physics_world.collider_set[self.collider];
 
+        draw_compound_collider(collider, rigid_body.position());
+
         let position: Vec2 = (*rigid_body.translation()).into();
         draw_marker_at(position, 0.8, 0.2, GREEN);
 
         let center_of_mass: Vec2 = (*rigid_body.center_of_mass()).into();
         draw_marker_at(center_of_mass, 1.0, 0.2, RED);
     }
+}
+
+fn draw_compound_collider(collider: &Collider, rigod_body_position: &Isometry<Real>) -> Option<()> {
+    for (collider_position, shape) in collider.shape().as_compound()?.shapes() {
+        if let Some(shape) = shape.as_convex_polygon() {
+            let points: Vec<_> = shape
+                .points()
+                .into_iter()
+                .map(|point| {
+                    rigod_body_position.transform_point(&collider_position.transform_point(point))
+                })
+                .collect();
+
+            for i in 0..points.len() {
+                let a = points[i];
+                let b = points[(i + 1) % points.len()];
+
+                draw_line(a.x, a.y, b.x, b.y, 0.1, MAGENTA);
+            }
+        }
+    }
+
+    Some(())
 }
 
 fn draw_marker_at(position: Vec2, radius: f32, bold: f32, color: Color) {
