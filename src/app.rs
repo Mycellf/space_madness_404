@@ -71,7 +71,7 @@ impl App {
 
         if self.debug {
             for object in &self.objects {
-                object.draw_info(&mut self.physics_world);
+                object.draw_debug(&mut self.physics_world);
             }
         }
     }
