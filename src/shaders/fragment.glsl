@@ -14,8 +14,8 @@ void main()
     vec2 pixel_cord = mod(texture_cord / 2.0, 1.0);
 
     // Fixes line artifacts on positive edges of image. Likely unnececary. 
-    //pixel_cord.x += float(uv.x > 1.0) * (1.0 - pixel_cord.x);
-    //pixel_cord.y += float(uv.y > 1.0) * (1.0 - pixel_cord.y);
+    pixel_cord.x += float(uv.x >= 1.0) * (1.0 - pixel_cord.x);
+    pixel_cord.y += float(uv.y >= 1.0) * (1.0 - pixel_cord.y);
 
     pixel.x += float(pixel_cord.y < pixel_cord.x);
     pixel.y += float(pixel_cord.y > 1.0 - pixel_cord.x);
