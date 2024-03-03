@@ -8,6 +8,7 @@ pub struct App {
 
 impl App {
     pub const FIXED_TICKS_PER_SEC: f32 = 60.0;
+    pub const FIXED_DELTA_TIME: f32 = 1.0 / Self::FIXED_TICKS_PER_SEC;
     pub const MAX_TICKS_PER_FRAME: u32 = 5;
 
     pub fn new() -> Self {
@@ -40,7 +41,7 @@ impl App {
     }
 
     pub fn fixed_tick(&mut self) {
-        self.camera.target.x += 0.1;
+        self.camera.rotation += 10.0 * Self::FIXED_DELTA_TIME;
     }
 
     fn update_camera(&mut self) {

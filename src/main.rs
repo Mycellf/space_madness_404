@@ -23,7 +23,7 @@ async fn main() {
 
         app.frame_tick();
 
-        draw_texture(&texture, 0.0, 0.0, WHITE);
+        draw_texture(&texture, -16.0, -16.0, WHITE);
 
         next_frame().await;
     }
