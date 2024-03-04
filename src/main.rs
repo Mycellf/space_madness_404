@@ -63,12 +63,22 @@ fn make_shape() -> SharedShape {
         (
             Isometry::<Real>::identity(),
             SharedShape::convex_polyline(vec![
-                point![-2.0, 2.0],
-                point![-4.0, 4.0],
-                point![-8.0, 4.0],
-                point![-8.0, -4.0],
-                point![-4.0, -4.0],
-                point![-2.0, -2.0],
+                point![-3.0, 2.0],
+                point![-4.0, 3.0],
+                point![-8.0, 3.0],
+                point![-8.0, -3.0],
+                point![-4.0, -3.0],
+                point![-3.0, -2.0],
+            ])
+            .unwrap(),
+        ),
+        (
+            Isometry::<Real>::identity(),
+            SharedShape::convex_polyline(vec![
+                point![-2.0, 4.0],
+                point![-3.0, 3.0],
+                point![-3.0, -3.0],
+                point![-2.0, -4.0],
             ])
             .unwrap(),
         ),
