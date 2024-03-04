@@ -9,7 +9,6 @@ pub mod graphics;
 pub mod keybinds;
 pub mod object;
 pub mod physics_world;
-pub mod portability;
 
 fn window_conf() -> Conf {
     Conf {
