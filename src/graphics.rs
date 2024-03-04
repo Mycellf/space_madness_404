@@ -24,7 +24,7 @@ pub fn make_tri_pixel_material() -> Material {
 pub fn draw_stars_around(center: Vec2) {
     let center = center.as_dvec2();
 
-    for i in 500..600 {
+    for i in 500..650 {
         let i = (i * i) as f64;
         draw_star(
             DVec2::new(
