@@ -8,15 +8,40 @@ use rapier2d::prelude::*;
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Component {
     CameraFollow,
-    Motion { power: f32, brake: f32 },
+    Motion {
+        power: f32,
+        brake: f32,
+        emitter: Vec2,
+    },
     FaceMouse,
 }
 
 impl Component {
+    /// Occurs during the fixed update, just before the physics_update
+    /// is called for a given object.
     pub fn fixed_update(self, object: &mut Object, app: &mut App) {
         match self {
             Self::CameraFollow => {}
-            Self::Motion { power, brake } => {
+            Self::Motion {
+                power: _,
+                brake: _,
+                emitter: _,
+            } => {}
+            Self::FaceMouse => {}
+        }
+    }
+
+    /// Occurs when the game is not paused, during the fixed
+    /// timestep, after the fixed update is called for a given
+    /// object.
+    pub fn physics_update(self, object: &mut Object, app: &mut App) {
+        match self {
+            Self::CameraFollow => {}
+            Self::Motion {
+                power,
+                brake,
+                emitter: _,
+            } => {
                 if app.keybinds.get(KeyAction::Boost).is_pressed() {
                     let rigid_body = app.get_rigid_body_mut(object);
                     let rotation = rigid_body.rotation();
@@ -48,12 +73,45 @@ impl Component {
         }
     }
 
+    /// Occurs before each frame is rendered, after the fixed and
+    /// physics updates are called.
     pub fn frame_update(self, object: &mut Object, app: &mut App) {
         match self {
             Self::CameraFollow => {
                 app.camera.target = (*app.get_rigid_body(object).center_of_mass()).into();
             }
-            Self::Motion { power: _, brake: _ } => {}
+            Self::Motion {
+                power: _,
+                brake: _,
+                emitter: _,
+            } => {}
+            Self::FaceMouse => {}
+        }
+    }
+
+    pub fn draw(self, object: &Object, app: &App) {
+        match self {
+            Self::CameraFollow => {}
+            Self::Motion {
+                power: _,
+                brake: _,
+                emitter,
+            } => {
+                const UP: Vec2 = Vec2::new(0.0, 2.0);
+                const LEFT: Vec2 = Vec2::new(0.05, 0.0);
+
+                if !app.keybinds.get(KeyAction::Boost).is_pressed() {
+                    return;
+                }
+
+                let rigod_body = app.get_rigid_body(object);
+                let position = rigod_body.position();
+                let a = position.transform_point(&(emitter + UP - LEFT).into());
+                let b = position.transform_point(&(emitter - UP - LEFT).into());
+
+                gl_use_default_material();
+                draw_line(a.x, a.y, b.x, b.y, 0.1, WHITE);
+            }
             Self::FaceMouse => {}
         }
     }

@@ -63,10 +63,13 @@ impl App {
 
         crate::graphics::draw_stars_around(self.camera.target);
 
-        gl_use_material(&self.material);
-
         for object in &self.objects {
+            gl_use_material(&self.material);
             object.draw(&mut self.physics_world);
+
+            for component in &object.components {
+                component.draw(object, self);
+            }
         }
 
         gl_use_default_material();
@@ -79,10 +82,6 @@ impl App {
     }
 
     pub fn check_fixed_tick(&mut self) {
-        if self.paused {
-            return;
-        }
-
         self.fixed_tick_time += get_frame_time() * Self::FIXED_TICKS_PER_SEC;
 
         for _ in 0..(self.fixed_tick_time as u32).min(Self::MAX_TICKS_PER_FRAME) {
@@ -99,11 +98,20 @@ impl App {
                 let object_ptr = object as *mut Object;
                 for component in &object.components {
                     component.fixed_update(object_ptr.as_mut().unwrap(), app_ptr.as_mut().unwrap());
+
+                    if !self.paused {
+                        component.physics_update(
+                            object_ptr.as_mut().unwrap(),
+                            app_ptr.as_mut().unwrap(),
+                        );
+                    }
                 }
             }
         }
 
-        self.physics_world.step();
+        if !self.paused {
+            self.physics_world.step();
+        }
     }
 
     fn update_camera(&mut self) {

@@ -32,6 +32,7 @@ async fn main() {
             Component::Motion {
                 power: 100.0,
                 brake: 0.975,
+                emitter: Vec2::new(-8.0, 0.0),
             },
             Component::CameraFollow,
         ],
