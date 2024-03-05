@@ -17,8 +17,8 @@ pub enum Component {
 }
 
 impl Component {
-    /// Occurs during the fixed update, just before the physics_update
-    /// is called for a given object.
+    /// Occurs during the fixed timestep, just before the `physics_update`
+    /// is called for a given component.
     pub fn fixed_update(&mut self, _object: &mut Object, _app: &mut App) {
         match self {
             Self::CameraFollow => {}
@@ -32,8 +32,8 @@ impl Component {
     }
 
     /// Occurs when the game is not paused, during the fixed
-    /// timestep, after the fixed update is called for a given
-    /// object.
+    /// timestep, after the `fixed_update` is called for a given
+    /// component.
     pub fn physics_update(&mut self, object: &mut Object, app: &mut App) {
         match self {
             Self::CameraFollow => {}
@@ -73,7 +73,7 @@ impl Component {
         }
     }
 
-    /// Occurs before each frame is rendered, after the fixed and
+    /// Occurs before each frame is rendered, after all fixed and
     /// physics updates are called.
     pub fn frame_update(&mut self, object: &mut Object, app: &mut App) {
         match self {
@@ -89,6 +89,8 @@ impl Component {
         }
     }
 
+    /// Is called just after drawing the object the component is
+    /// attatched to.
     pub fn draw(&self, object: &Object, app: &App) {
         match self {
             Self::CameraFollow => {}
