@@ -3,15 +3,15 @@ use std::collections::HashSet;
 
 #[derive(Clone, Debug)]
 pub struct TileMap {
-    contents: Vec<Vec<Tile>>,
-    image: Image,
-    texture: Texture2D,
-    updates: HashSet<UVec2>,
+    pub contents: Vec<Vec<Tile>>,
+    pub image: Image,
+    pub texture: Texture2D,
+    pub updates: HashSet<UVec2>,
 }
 
 #[derive(Clone, Debug)]
 pub struct Tile {
-    image: Image,
+    pub image: Image,
 }
 
 impl Tile {
