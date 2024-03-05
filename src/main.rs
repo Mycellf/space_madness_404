@@ -9,6 +9,7 @@ pub mod graphics;
 pub mod keybinds;
 pub mod object;
 pub mod physics_world;
+pub mod tilemap;
 
 fn window_conf() -> Conf {
     Conf {
