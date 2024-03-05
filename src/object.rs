@@ -9,6 +9,7 @@ pub struct Object {
     pub texture: Texture2D,
     pub size: Vec2,
     pub components: Vec<Component>,
+    pub offset: Vec2,
 }
 
 impl Object {
@@ -18,6 +19,7 @@ impl Object {
         collider: Collider,
         texture: Texture2D,
         components: Vec<Component>,
+        offset: Vec2,
     ) -> Self {
         let (rigid_body, collider) = physics_world.add_rigidbody(rigid_body, collider);
 
@@ -29,6 +31,7 @@ impl Object {
             texture,
             size,
             components,
+            offset,
         }
     }
 
@@ -39,8 +42,8 @@ impl Object {
 
         draw_texture_ex(
             &self.texture,
-            position.x - self.size.x / 2.0,
-            position.y - self.size.y / 2.0,
+            position.x - self.size.x * self.offset.x,
+            position.y - self.size.y * self.offset.y,
             WHITE,
             DrawTextureParams {
                 dest_size: Some(self.size),

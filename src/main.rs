@@ -36,6 +36,7 @@ async fn main() {
             },
             Component::CameraFollow,
         ],
+        Vec2::new(0.5, 0.5),
     ));
 
     app.objects.push(Object::new(
@@ -47,6 +48,7 @@ async fn main() {
         ColliderBuilder::new(make_shape()).build(),
         load_texture("assets/ship.png").await.unwrap(),
         Vec::new(),
+        Vec2::new(0.5, 0.5),
     ));
 
     loop {
