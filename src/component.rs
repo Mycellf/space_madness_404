@@ -1,11 +1,12 @@
 use crate::app::App;
 use crate::keybinds::KeyAction;
 use crate::object::Object;
+use crate::tilemap::TileMap;
 use macroquad::{miniquad::window::screen_size, prelude::*};
 use nalgebra::{Complex, Unit};
 use rapier2d::prelude::*;
 
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Clone, Debug)]
 pub enum Component {
     CameraFollow,
     Motion {
@@ -14,6 +15,7 @@ pub enum Component {
         emitter: Vec2,
     },
     FaceMouse,
+    TileMap(TileMap),
 }
 
 impl Component {
@@ -28,6 +30,7 @@ impl Component {
                 emitter: _,
             } => {}
             Self::FaceMouse => {}
+            Self::TileMap(_) => {}
         }
     }
 
@@ -70,6 +73,7 @@ impl Component {
                     rigid_body.apply_torque_impulse((angle - velocity) * coefficient, true);
                 }
             }
+            Self::TileMap(_) => {}
         }
     }
 
@@ -86,6 +90,7 @@ impl Component {
                 emitter: _,
             } => {}
             Self::FaceMouse => {}
+            Self::TileMap(_) => {}
         }
     }
 
@@ -115,6 +120,7 @@ impl Component {
                 draw_line(a.x, a.y, b.x, b.y, 0.1, WHITE);
             }
             Self::FaceMouse => {}
+            Self::TileMap(_) => {}
         }
     }
 }
