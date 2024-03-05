@@ -19,7 +19,7 @@ pub enum Component {
 impl Component {
     /// Occurs during the fixed update, just before the physics_update
     /// is called for a given object.
-    pub fn fixed_update(&mut self, object: &mut Object, app: &mut App) {
+    pub fn fixed_update(&mut self, _object: &mut Object, _app: &mut App) {
         match self {
             Self::CameraFollow => {}
             Self::Motion {
