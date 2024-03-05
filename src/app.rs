@@ -51,7 +51,7 @@ impl App {
             let app_ptr = self as *mut App;
             for object in &mut self.objects {
                 let object_ptr = object as *mut Object;
-                for component in &object.components {
+                for component in &mut object.components {
                     component.frame_update(object_ptr.as_mut().unwrap(), app_ptr.as_mut().unwrap());
                 }
             }
@@ -96,7 +96,7 @@ impl App {
             let app_ptr = self as *mut App;
             for object in &mut self.objects {
                 let object_ptr = object as *mut Object;
-                for component in &object.components {
+                for component in &mut object.components {
                     component.fixed_update(object_ptr.as_mut().unwrap(), app_ptr.as_mut().unwrap());
 
                     if !self.paused {

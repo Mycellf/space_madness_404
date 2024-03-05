@@ -5,7 +5,7 @@ use macroquad::{miniquad::window::screen_size, prelude::*};
 use nalgebra::{Complex, Unit};
 use rapier2d::prelude::*;
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Clone, PartialEq, Debug)]
 pub enum Component {
     CameraFollow,
     Motion {
@@ -19,7 +19,7 @@ pub enum Component {
 impl Component {
     /// Occurs during the fixed update, just before the physics_update
     /// is called for a given object.
-    pub fn fixed_update(self, object: &mut Object, app: &mut App) {
+    pub fn fixed_update(&mut self, object: &mut Object, app: &mut App) {
         match self {
             Self::CameraFollow => {}
             Self::Motion {
@@ -34,7 +34,7 @@ impl Component {
     /// Occurs when the game is not paused, during the fixed
     /// timestep, after the fixed update is called for a given
     /// object.
-    pub fn physics_update(self, object: &mut Object, app: &mut App) {
+    pub fn physics_update(&mut self, object: &mut Object, app: &mut App) {
         match self {
             Self::CameraFollow => {}
             Self::Motion {
@@ -46,11 +46,11 @@ impl Component {
                     let rigid_body = app.get_rigid_body_mut(object);
                     let rotation = rigid_body.rotation();
                     let rotation = vector![rotation.re, rotation.im];
-                    rigid_body.apply_impulse(rotation * power, true);
+                    rigid_body.apply_impulse(rotation * *power, true);
                 }
                 if app.keybinds.get(KeyAction::Slow).is_pressed() {
                     let rigid_body = app.get_rigid_body_mut(object);
-                    rigid_body.set_linvel(rigid_body.linvel() * brake, true);
+                    rigid_body.set_linvel(rigid_body.linvel() * *brake, true);
                 }
             }
             Self::FaceMouse => {
@@ -75,7 +75,7 @@ impl Component {
 
     /// Occurs before each frame is rendered, after the fixed and
     /// physics updates are called.
-    pub fn frame_update(self, object: &mut Object, app: &mut App) {
+    pub fn frame_update(&mut self, object: &mut Object, app: &mut App) {
         match self {
             Self::CameraFollow => {
                 app.camera.target = (*app.get_rigid_body(object).center_of_mass()).into();
@@ -89,7 +89,7 @@ impl Component {
         }
     }
 
-    pub fn draw(self, object: &Object, app: &App) {
+    pub fn draw(&self, object: &Object, app: &App) {
         match self {
             Self::CameraFollow => {}
             Self::Motion {
@@ -106,8 +106,8 @@ impl Component {
 
                 let rigod_body = app.get_rigid_body(object);
                 let position = rigod_body.position();
-                let a = position.transform_point(&(emitter + UP - LEFT).into());
-                let b = position.transform_point(&(emitter - UP - LEFT).into());
+                let a = position.transform_point(&(*emitter + UP - LEFT).into());
+                let b = position.transform_point(&(*emitter - UP - LEFT).into());
 
                 gl_use_default_material();
                 draw_line(a.x, a.y, b.x, b.y, 0.1, WHITE);
