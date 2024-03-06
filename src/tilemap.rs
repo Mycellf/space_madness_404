@@ -1,16 +1,48 @@
 use macroquad::prelude::*;
-use std::collections::HashSet;
+use std::{
+    collections::HashSet,
+    ops::{Index, IndexMut},
+};
 
 #[derive(Clone, Debug)]
 pub struct TileMap {
     pub contents: Vec<Vec<Tile>>,
     pub image: Image,
-    pub texture: Texture2D,
     pub updates: HashSet<UVec2>,
 }
 
 impl TileMap {
-    const TILE_SIZE: u32 = 8;
+    pub fn new(size: UVec2) -> Self {
+        Self {
+            contents: (0..size.x)
+                .map(|_| {
+                    (0..size.y)
+                        .map(|_| Tile {
+                            tile_type: TileType::Empty,
+                        })
+                        .collect()
+                })
+                .collect(),
+            image: Image::gen_image_color(size.x as u16, size.y as u16, BLANK),
+            updates: HashSet::new(),
+        }
+    }
+
+    pub fn update_to_texture(&mut self, texture: &mut Texture2D) {
+        for &update_index in &self.updates {
+            let update_translation = update_index * Tile::SIZE_PIXELS;
+
+            texture.update_part(
+                &self.image,
+                update_translation.x as i32,
+                update_translation.y as i32,
+                Tile::SIZE_PIXELS as i32,
+                Tile::SIZE_PIXELS as i32,
+            )
+        }
+
+        self.updates.clear();
+    }
 
     pub fn get(&self, index: UVec2) -> Option<&Tile> {
         let index = (index.x as usize, index.y as usize);
@@ -30,34 +62,35 @@ impl TileMap {
         Some(())
     }
 
-    pub fn update_full_texture(&mut self) {
-        self.texture.update(&self.image);
-    }
-
-    pub fn update_tile_texture(&mut self, tile: UVec2) -> Option<()> {
-        let tile_translation = tile * Self::TILE_SIZE;
-
-        self.texture.update_part(
-            &self.get(tile)?.image,
-            tile_translation.x as i32,
-            tile_translation.y as i32,
-            Self::TILE_SIZE as i32,
-            Self::TILE_SIZE as i32,
-        );
-
-        Some(())
-    }
-
     pub fn size(&self) -> UVec2 {
         UVec2::new(self.contents.len() as u32, self.contents[0].len() as u32)
     }
 }
 
-#[derive(Clone, Debug)]
+impl Index<UVec2> for TileMap {
+    type Output = Tile;
+
+    fn index(&self, index: UVec2) -> &Self::Output {
+        self.get(index).unwrap()
+    }
+}
+
+impl IndexMut<UVec2> for TileMap {
+    fn index_mut(&mut self, index: UVec2) -> &mut Self::Output {
+        self.get_mut(index).unwrap()
+    }
+}
+
+#[derive(Clone, Copy, Debug)]
 pub struct Tile {
-    pub image: Image,
+    pub tile_type: TileType,
 }
 
 impl Tile {
-    pub const SIZE_PIXELS: usize = 8;
+    pub const SIZE_PIXELS: u32 = 8;
+}
+
+#[derive(Clone, Copy, Debug)]
+pub enum TileType {
+    Empty,
 }
