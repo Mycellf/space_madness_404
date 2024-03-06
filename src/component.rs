@@ -90,7 +90,9 @@ impl Component {
                 emitter: _,
             } => {}
             Self::FaceMouse => {}
-            Self::TileMap(_) => {}
+            Self::TileMap(tile_map) => {
+                tile_map.update_to_texture(&mut object.texture);
+            }
         }
     }
 

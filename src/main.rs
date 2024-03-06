@@ -1,5 +1,6 @@
 use crate::component::Component;
 use crate::object::Object;
+use crate::tilemap::{Tile, TileMap, TileType};
 use macroquad::prelude::*;
 use rapier2d::prelude::*;
 
@@ -51,6 +52,26 @@ async fn main() {
         Vec::new(),
         Vec2::new(0.5, 0.5),
     ));
+
+    app.objects.push(Object::new(
+        &mut app.physics_world,
+        RigidBodyBuilder::fixed()
+            .translation(vector![-64.0, -64.0])
+            .build(),
+        ColliderBuilder::new(make_shape()).build(),
+        Texture2D::from_image(&Image::gen_image_color(16, 16, BLANK)),
+        vec![Component::TileMap(TileMap::new(UVec2::new(16, 16)))],
+        Vec2::new(0.0, 0.0),
+    ));
+
+    if let Component::TileMap(tile_map) = &mut app.objects[2].components[0] {
+        tile_map.set(
+            UVec2::new(1, 1),
+            Tile {
+                tile_type: TileType::Empty,
+            },
+        );
+    }
 
     loop {
         app.check_fixed_tick();
