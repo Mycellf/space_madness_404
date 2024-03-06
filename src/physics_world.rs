@@ -18,7 +18,10 @@ impl PhysicsWorld {
     pub fn new() -> Self {
         Self {
             physics_pipeline: PhysicsPipeline::new(),
-            integration_parameters: IntegrationParameters::default(),
+            integration_parameters: IntegrationParameters {
+                dt: crate::app::App::FIXED_DELTA_TIME,
+                ..Default::default()
+            },
             island_manager: IslandManager::new(),
             broad_phase: BroadPhase::new(),
             narrow_phase: NarrowPhase::new(),
