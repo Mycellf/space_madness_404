@@ -59,6 +59,18 @@ impl TileMap {
     pub fn set(&mut self, index: UVec2, tile: Tile) -> Option<()> {
         *self.get_mut(index)? = tile;
 
+        self.updates.insert(index);
+
+        Some(())
+    }
+
+    pub fn update_tile(&mut self, index: UVec2) -> Option<()> {
+        if index.x >= self.size().x && index.y >= self.size().y {
+            return None;
+        }
+
+        self.updates.insert(index);
+
         Some(())
     }
 
