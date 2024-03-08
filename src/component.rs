@@ -113,8 +113,8 @@ impl Component {
                     return;
                 }
 
-                let rigod_body = app.get_rigid_body(object);
-                let position = rigod_body.position();
+                let rigid_body = app.get_rigid_body(object);
+                let position = rigid_body.position();
                 let a = position.transform_point(&(*emitter + UP - LEFT).into());
                 let b = position.transform_point(&(*emitter - UP - LEFT).into());
 
