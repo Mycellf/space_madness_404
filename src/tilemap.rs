@@ -13,6 +13,11 @@ pub struct TileMap {
 
 impl TileMap {
     pub fn new(size: UVec2) -> Self {
+        let pixel_size = (
+            (size.x * Tile::SIZE_PIXELS) as u16,
+            (size.y * Tile::SIZE_PIXELS) as u16,
+        );
+
         Self {
             contents: (0..size.x)
                 .map(|_| {
@@ -23,7 +28,7 @@ impl TileMap {
                         .collect()
                 })
                 .collect(),
-            image: Image::gen_image_color(size.x as u16, size.y as u16, BLANK),
+            image: Image::gen_image_color(pixel_size.0, pixel_size.1, BLANK),
             updates: HashSet::new(),
         }
     }
@@ -99,7 +104,8 @@ pub struct Tile {
 }
 
 impl Tile {
-    pub const SIZE_PIXELS: u32 = 8;
+    pub const SIZE_TEXELS: u32 = 8;
+    pub const SIZE_PIXELS: u32 = Tile::SIZE_TEXELS * 2;
 }
 
 #[derive(Clone, Copy, Debug)]
