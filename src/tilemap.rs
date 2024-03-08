@@ -7,18 +7,12 @@ use std::{
 #[derive(Clone, Debug)]
 pub struct TileMap {
     pub contents: Vec<Vec<Tile>>,
-    pub image: Image,
     pub updates: HashSet<UVec2>,
     pub tile_images: Vec<Option<Image>>,
 }
 
 impl TileMap {
     pub async fn new(size: UVec2) -> Self {
-        let pixel_size = (
-            (size.x * Tile::SIZE_PIXELS) as u16,
-            (size.y * Tile::SIZE_PIXELS) as u16,
-        );
-
         Self {
             contents: (0..size.x)
                 .map(|_| {
@@ -29,7 +23,6 @@ impl TileMap {
                         .collect()
                 })
                 .collect(),
-            image: Image::gen_image_color(pixel_size.0, pixel_size.1, BLANK),
             updates: HashSet::new(),
             tile_images: TileType::load_images().await,
         }
@@ -39,18 +32,16 @@ impl TileMap {
         for &update_index in &self.updates {
             let update_translation = update_index * Tile::SIZE_PIXELS;
 
-            texture.update_part(
-                &self.image.sub_image(Rect::new(
-                    update_translation.x as f32,
-                    update_translation.y as f32,
-                    Tile::SIZE_PIXELS as f32,
-                    Tile::SIZE_PIXELS as f32,
-                )),
-                update_translation.x as i32,
-                update_translation.y as i32,
-                Tile::SIZE_PIXELS as i32,
-                Tile::SIZE_PIXELS as i32,
-            )
+            match &self.tile_images[self.get(update_index).unwrap().tile_type as usize] {
+                Some(image) => texture.update_part(
+                    image,
+                    update_translation.x as i32,
+                    update_translation.y as i32,
+                    Tile::SIZE_PIXELS as i32,
+                    Tile::SIZE_PIXELS as i32,
+                ),
+                None => (),
+            }
         }
 
         self.updates.clear();
@@ -71,26 +62,7 @@ impl TileMap {
     pub fn set(&mut self, index: UVec2, tile: Tile) -> Option<()> {
         *self.get_mut(index)? = tile;
 
-        self.update_image(index, tile);
-
         self.updates.insert(index);
-
-        Some(())
-    }
-
-    fn update_image(&mut self, index: UVec2, tile: Tile) -> Option<()> {
-        let image = self.tile_images[tile.tile_type as usize].as_ref()?;
-        let tile_translation = index * Tile::SIZE_PIXELS;
-
-        for y in 0..Tile::SIZE_PIXELS {
-            for x in 0..Tile::SIZE_PIXELS {
-                let offset = uvec2(x, y);
-                let location = tile_translation + offset;
-
-                self.image
-                    .set_pixel(location.x, location.y, image.get_pixel(offset.x, offset.y));
-            }
-        }
 
         Some(())
     }
