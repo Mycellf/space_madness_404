@@ -71,7 +71,26 @@ impl TileMap {
     pub fn set(&mut self, index: UVec2, tile: Tile) -> Option<()> {
         *self.get_mut(index)? = tile;
 
+        self.update_image(index, tile);
+
         self.updates.insert(index);
+
+        Some(())
+    }
+
+    fn update_image(&mut self, index: UVec2, tile: Tile) -> Option<()> {
+        let image = self.tile_images[tile.tile_type as usize].as_ref()?;
+        let tile_translation = index * Tile::SIZE_PIXELS;
+
+        for y in 0..Tile::SIZE_PIXELS {
+            for x in 0..Tile::SIZE_PIXELS {
+                let offset = uvec2(x, y);
+                let location = tile_translation + offset;
+
+                self.image
+                    .set_pixel(location.x, location.y, image.get_pixel(offset.x, offset.y));
+            }
+        }
 
         Some(())
     }
@@ -87,7 +106,7 @@ impl TileMap {
     }
 
     pub fn size(&self) -> UVec2 {
-        UVec2::new(self.contents.len() as u32, self.contents[0].len() as u32)
+        uvec2(self.contents.len() as u32, self.contents[0].len() as u32)
     }
 }
 

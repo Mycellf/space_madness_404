@@ -72,7 +72,7 @@ async fn main() {
         tile_map.set(
             UVec2::new(1, 1),
             Tile {
-                tile_type: TileType::Empty,
+                tile_type: TileType::Wall,
             },
         );
     }
