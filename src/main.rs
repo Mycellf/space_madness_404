@@ -59,8 +59,12 @@ async fn main() {
             .translation(vector![-64.0, -64.0])
             .build(),
         ColliderBuilder::new(make_shape()).build(),
-        Texture2D::from_image(&Image::gen_image_color(16, 16, BLANK)),
-        vec![Component::TileMap(TileMap::new(UVec2::new(16, 16)))],
+        Texture2D::from_image(&Image::gen_image_color(
+            (16 * Tile::SIZE_PIXELS) as u16,
+            (16 * Tile::SIZE_PIXELS) as u16,
+            BLANK,
+        )),
+        vec![Component::TileMap(TileMap::new(UVec2::new(16, 16)).await)],
         Vec2::new(0.0, 0.0),
     ));
 

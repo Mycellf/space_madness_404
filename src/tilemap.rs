@@ -9,10 +9,11 @@ pub struct TileMap {
     pub contents: Vec<Vec<Tile>>,
     pub image: Image,
     pub updates: HashSet<UVec2>,
+    pub tile_images: Vec<Option<Image>>,
 }
 
 impl TileMap {
-    pub fn new(size: UVec2) -> Self {
+    pub async fn new(size: UVec2) -> Self {
         let pixel_size = (
             (size.x * Tile::SIZE_PIXELS) as u16,
             (size.y * Tile::SIZE_PIXELS) as u16,
@@ -30,6 +31,7 @@ impl TileMap {
                 .collect(),
             image: Image::gen_image_color(pixel_size.0, pixel_size.1, BLANK),
             updates: HashSet::new(),
+            tile_images: TileType::load_images().await,
         }
     }
 
@@ -38,7 +40,12 @@ impl TileMap {
             let update_translation = update_index * Tile::SIZE_PIXELS;
 
             texture.update_part(
-                &self.image,
+                &self.image.sub_image(Rect::new(
+                    update_translation.x as f32,
+                    update_translation.y as f32,
+                    Tile::SIZE_PIXELS as f32,
+                    Tile::SIZE_PIXELS as f32,
+                )),
                 update_translation.x as i32,
                 update_translation.y as i32,
                 Tile::SIZE_PIXELS as i32,
@@ -109,6 +116,34 @@ impl Tile {
 }
 
 #[derive(Clone, Copy, Debug)]
+#[repr(usize)]
 pub enum TileType {
     Empty,
+    Wall,
+}
+
+impl TileType {
+    pub const TYPES: [TileType; 2] = [Self::Empty, Self::Wall];
+
+    pub fn path_to_image(self) -> Option<&'static str> {
+        match self {
+            Self::Empty => None,
+            Self::Wall => Some("assets/wall.png"),
+        }
+    }
+
+    pub async fn load_images() -> Vec<Option<Image>> {
+        let mut images = Vec::with_capacity(TileType::TYPES.len());
+
+        for tile_type in TileType::TYPES {
+            let image = match tile_type.path_to_image() {
+                Some(path) => Some(load_image(path).await.unwrap()),
+                None => None,
+            };
+
+            images.push(image);
+        }
+
+        images
+    }
 }
