@@ -33,13 +33,15 @@ impl TileMap {
             let update_translation = update_index * Tile::SIZE_PIXELS;
 
             match &self.tile_images[self.get(update_index).unwrap().tile_type as usize] {
-                Some(image) => texture.update_part(
-                    image,
-                    update_translation.x as i32,
-                    update_translation.y as i32,
-                    Tile::SIZE_PIXELS as i32,
-                    Tile::SIZE_PIXELS as i32,
-                ),
+                Some(image) => {
+                    texture.update_part(
+                        image,
+                        update_translation.x as i32,
+                        update_translation.y as i32,
+                        Tile::SIZE_PIXELS as i32,
+                        Tile::SIZE_PIXELS as i32,
+                    );
+                }
                 None => (),
             }
         }
