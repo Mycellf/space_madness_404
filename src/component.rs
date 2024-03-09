@@ -106,8 +106,8 @@ impl Component {
                 brake: _,
                 emitter,
             } => {
-                const UP: Vec2 = Vec2::new(0.0, 2.0);
-                const LEFT: Vec2 = Vec2::new(0.05, 0.0);
+                const UP: Vec2 = vec2(0.0, 2.0);
+                const LEFT: Vec2 = vec2(0.05, 0.0);
 
                 if !app.keybinds.get(KeyAction::Boost).is_pressed() {
                     return;

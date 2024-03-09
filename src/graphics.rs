@@ -27,7 +27,7 @@ pub fn draw_stars_around(center: Vec2) {
     for i in 500..650 {
         let i = (i * i) as f64;
         draw_star(
-            DVec2::new(
+            dvec2(
                 (i * 34501.0 - center.x) % 1000.0 - 500.0 + center.x,
                 (i * 75683.0 - center.y) % 1000.0 - 500.0 + center.y,
             ),
