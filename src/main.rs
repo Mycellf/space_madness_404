@@ -24,6 +24,38 @@ fn window_conf() -> Conf {
 async fn main() {
     let mut app = app::App::new();
 
+    const TILE_MAP_SIZE: u32 = 16;
+
+    app.objects.push(Object::new(
+        &mut app.physics_world,
+        RigidBodyBuilder::fixed()
+            .translation(vector![-64.0, -64.0])
+            .build(),
+        ColliderBuilder::new(make_shape()).build(),
+        Texture2D::from_image(&Image::gen_image_color(
+            (TILE_MAP_SIZE * Tile::SIZE_PIXELS) as u16,
+            (TILE_MAP_SIZE * Tile::SIZE_PIXELS) as u16,
+            BLANK,
+        )),
+        vec![Component::TileMap(
+            TileMap::new(uvec2(TILE_MAP_SIZE, TILE_MAP_SIZE)).await,
+        )],
+        vec2(0.0, 0.0),
+    ));
+
+    if let Component::TileMap(tile_map) = &mut app.objects[0].components[0] {
+        for x in 0..=4 {
+            for y in 0..=4 {
+                tile_map.set(
+                    uvec2(x, y),
+                    Tile {
+                        tile_type: TileType::Wall,
+                    },
+                );
+            }
+        }
+    }
+
     app.objects.push(Object::new(
         &mut app.physics_world,
         RigidBodyBuilder::dynamic()
@@ -31,7 +63,7 @@ async fn main() {
             .can_sleep(false)
             .build(),
         ColliderBuilder::new(make_shape()).build(),
-        load_texture("assets/ship.png").await.unwrap(),
+        load_texture("assets/ship_actjve.png").await.unwrap(),
         vec![
             Component::FaceMouse,
             Component::Motion {
@@ -52,38 +84,10 @@ async fn main() {
             .translation(vector![40.0, 0.0])
             .build(),
         ColliderBuilder::new(make_shape()).build(),
-        load_texture("assets/ship.png").await.unwrap(),
+        load_texture("assets/ship_inactive.png").await.unwrap(),
         Vec::new(),
         vec2(0.5, 0.5),
     ));
-
-    app.objects.push(Object::new(
-        &mut app.physics_world,
-        RigidBodyBuilder::fixed()
-            .translation(vector![-64.0, -64.0])
-            .build(),
-        ColliderBuilder::new(make_shape()).build(),
-        Texture2D::from_image(&Image::gen_image_color(
-            (16 * Tile::SIZE_PIXELS) as u16,
-            (16 * Tile::SIZE_PIXELS) as u16,
-            BLANK,
-        )),
-        vec![Component::TileMap(TileMap::new(uvec2(16, 16)).await)],
-        vec2(0.0, 0.0),
-    ));
-
-    if let Component::TileMap(tile_map) = &mut app.objects[2].components[0] {
-        for x in 1..=3 {
-            for y in 1..=3 {
-                tile_map.set(
-                    uvec2(x, y),
-                    Tile {
-                        tile_type: TileType::Wall,
-                    },
-                );
-            }
-        }
-    }
 
     loop {
         app.check_fixed_tick();
