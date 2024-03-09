@@ -63,7 +63,7 @@ async fn main() {
             .can_sleep(false)
             .build(),
         ColliderBuilder::new(make_shape()).build(),
-        load_texture("assets/ship_actjve.png").await.unwrap(),
+        load_texture("assets/ship_active.png").await.unwrap(),
         vec![
             Component::FaceMouse,
             Component::Motion {
