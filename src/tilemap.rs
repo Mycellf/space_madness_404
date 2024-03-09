@@ -1,4 +1,5 @@
 use macroquad::prelude::*;
+use rapier2d::prelude::*;
 use std::{
     collections::HashSet,
     ops::{Index, IndexMut},
@@ -125,6 +126,13 @@ impl TileType {
         }
     }
 
+    pub fn shape(self) -> Option<TileShape> {
+        match self {
+            Self::Empty => None,
+            Self::Wall => Some(TileShape::Box),
+        }
+    }
+
     pub async fn load_images() -> Vec<Option<Image>> {
         let mut images = Vec::with_capacity(TileType::TYPES.len());
 
@@ -139,4 +147,29 @@ impl TileType {
 
         images
     }
+}
+
+#[derive(Clone, Copy, Debug)]
+pub enum TileShape {
+    Box,
+}
+
+impl TileShape {
+    pub fn get_shape(self) -> Polyline {
+        match self {
+            Self::Box => Polyline::new(
+                vec![
+                    point![0.0, 0.0],
+                    point![1.0, 0.0],
+                    point![1.0, 1.0],
+                    point![0.0, 1.0],
+                ],
+                Some(loop_indicies(4)),
+            ),
+        }
+    }
+}
+
+fn loop_indicies(length: u32) -> Vec<[u32; 2]> {
+    (0..length).map(|i| [i, (i + 1) % length]).collect()
 }
