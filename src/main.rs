@@ -26,7 +26,10 @@ async fn main() {
 
     app.objects.push(Object::new(
         &mut app.physics_world,
-        RigidBodyBuilder::dynamic().can_sleep(false).build(),
+        RigidBodyBuilder::dynamic()
+            .ccd_enabled(true)
+            .can_sleep(false)
+            .build(),
         ColliderBuilder::new(make_shape()).build(),
         load_texture("assets/ship.png").await.unwrap(),
         vec![
@@ -34,23 +37,24 @@ async fn main() {
             Component::Motion {
                 power: 100.0,
                 brake: 0.975,
-                emitter: Vec2::new(-8.0, 0.0),
+                emitter: vec2(-8.0, 0.0),
             },
             Component::CameraFollow,
         ],
-        Vec2::new(0.5, 0.5),
+        vec2(0.5, 0.5),
     ));
 
     app.objects.push(Object::new(
         &mut app.physics_world,
         RigidBodyBuilder::dynamic()
+            .ccd_enabled(true)
             .can_sleep(false)
             .translation(vector![40.0, 0.0])
             .build(),
         ColliderBuilder::new(make_shape()).build(),
         load_texture("assets/ship.png").await.unwrap(),
         Vec::new(),
-        Vec2::new(0.5, 0.5),
+        vec2(0.5, 0.5),
     ));
 
     app.objects.push(Object::new(
@@ -64,17 +68,21 @@ async fn main() {
             (16 * Tile::SIZE_PIXELS) as u16,
             BLANK,
         )),
-        vec![Component::TileMap(TileMap::new(UVec2::new(16, 16)).await)],
-        Vec2::new(0.0, 0.0),
+        vec![Component::TileMap(TileMap::new(uvec2(16, 16)).await)],
+        vec2(0.0, 0.0),
     ));
 
     if let Component::TileMap(tile_map) = &mut app.objects[2].components[0] {
-        tile_map.set(
-            UVec2::new(1, 1),
-            Tile {
-                tile_type: TileType::Wall,
-            },
-        );
+        for x in 1..=3 {
+            for y in 1..=3 {
+                tile_map.set(
+                    uvec2(x, y),
+                    Tile {
+                        tile_type: TileType::Wall,
+                    },
+                );
+            }
+        }
     }
 
     loop {
